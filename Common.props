@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Settings shared by all projects of the solution. -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <!-- so that  #include "data/Types.h"  and  #include "logic/GameRules.h"  work in every project -->
+      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)Layer 1;$(MSBuildThisFileDirectory)Layer 2;$(MSBuildThisFileDirectory)Layer 3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <!-- the game uses UTF-8 symbols (snake blocks, box lines) -->
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <PreprocessorDefinitions>NOMINMAX;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+</Project>
