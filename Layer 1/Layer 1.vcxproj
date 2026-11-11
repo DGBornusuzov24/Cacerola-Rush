@@ -128,10 +128,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="presentation\Console.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Cacerola-Rush-10.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="presentation\Console.cpp" />
   </ItemGroup>
   <ItemGroup>
