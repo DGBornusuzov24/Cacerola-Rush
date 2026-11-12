@@ -136,6 +136,7 @@
     <ClInclude Include="Screens.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\Downloads\MazeDisplay.cpp" />
     <ClCompile Include="Cacerola-Rush-10.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="InputHandler.cpp" />
