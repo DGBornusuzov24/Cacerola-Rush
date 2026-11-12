@@ -26,5 +26,8 @@
     <ClInclude Include="InputValidation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MazeGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
