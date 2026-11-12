@@ -137,6 +137,7 @@
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Panel.cpp" />
     <ClCompile Include="presentation\Console.cpp" />
+    <ClCompile Include="Screens.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Layer 2\Layer 2.vcxproj">
