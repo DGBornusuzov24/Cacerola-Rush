@@ -131,6 +131,7 @@
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Panel.h" />
     <ClInclude Include="presentation\Console.h" />
+    <ClInclude Include="Screens.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Cacerola-Rush-10.cpp" />
