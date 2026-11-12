@@ -137,6 +137,7 @@
   <ItemGroup>
     <ClCompile Include="Cacerola-Rush-10.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Panel.cpp" />
     <ClCompile Include="presentation\Console.cpp" />
