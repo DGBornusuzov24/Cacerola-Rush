@@ -135,6 +135,7 @@
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Panel.h" />
     <ClInclude Include="presentation\Console.h" />
+    <ClInclude Include="Scores.h" />
     <ClInclude Include="Screens.h" />
   </ItemGroup>
   <ItemGroup>

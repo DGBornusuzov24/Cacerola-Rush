@@ -39,6 +39,9 @@
     <ClInclude Include="GameRules.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Scores.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Cacerola-Rush-10.cpp">
