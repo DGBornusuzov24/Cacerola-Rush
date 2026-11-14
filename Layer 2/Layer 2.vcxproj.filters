@@ -32,5 +32,8 @@
     <ClInclude Include="MazeGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerMovement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
