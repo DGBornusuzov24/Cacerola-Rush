@@ -146,6 +146,7 @@
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Panel.cpp" />
     <ClCompile Include="presentation\Console.cpp" />
+    <ClCompile Include="Scores.cpp" />
     <ClCompile Include="Screens.cpp" />
   </ItemGroup>
   <ItemGroup>
