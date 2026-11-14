@@ -140,6 +140,7 @@
   <ItemGroup>
     <ClCompile Include="Cacerola-Rush-10.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameRules.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="MazeDisplay.cpp" />
     <ClCompile Include="Menu.cpp" />
