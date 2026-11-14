@@ -116,6 +116,7 @@
   <ItemGroup>
     <ClCompile Include="InputValidation.cpp" />
     <ClCompile Include="MazeGenerator.cpp" />
+    <ClCompile Include="PlayerMovement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InputValidation.h" />
