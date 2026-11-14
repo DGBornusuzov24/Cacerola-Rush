@@ -129,6 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameRules.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="MazeDisplay.h" />
     <ClInclude Include="Menu.h" />
