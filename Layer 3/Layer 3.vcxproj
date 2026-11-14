@@ -21,6 +21,10 @@
   <ItemGroup>
     <ClCompile Include="Maze.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Maze.h" />
+    <ClInclude Include="Types.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
