@@ -114,11 +114,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Layer 1\GameRules.cpp" />
+    <ClCompile Include="..\Layer 1\Scores.cpp" />
     <ClCompile Include="InputValidation.cpp" />
     <ClCompile Include="MazeGenerator.cpp" />
     <ClCompile Include="PlayerMovement.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Layer 1\GameRules.h" />
+    <ClInclude Include="..\Layer 1\Scores.h" />
     <ClInclude Include="InputValidation.h" />
     <ClInclude Include="MazeGenerator.h" />
     <ClInclude Include="PlayerMovement.h" />

@@ -36,12 +36,6 @@
     <ClInclude Include="MazeDisplay.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameRules.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Scores.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Cacerola-Rush-10.cpp">
@@ -66,12 +60,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MazeDisplay.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameRules.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scores.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
