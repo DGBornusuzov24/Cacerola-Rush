@@ -1,109 +1,63 @@
-#ifdef _WIN32
+// <conio.h> and <windows.h> must come before the other includes: they do not work after "using namespace std".
 #include <conio.h>
 #include <windows.h>
-#else
-#include <poll.h>
-#include <termios.h>
-#include <unistd.h>
-#endif
+
 #include <cctype>
 #include <iostream>
 
-#include "presentation/Console.h"
-#include "presentation/InputHandler.h"
+#include "Console.h"
+#include "InputHandler.h"
 
-namespace {
+// An arrow key sends two codes: first 224 (or 0), then one of these.
+const int ARROW_UP = 72;
+const int ARROW_DOWN = 80;
+const int ARROW_LEFT = 75;
+const int ARROW_RIGHT = 77;
 
-    Key characterToKey(int character) {
-        switch (tolower(character)) {
-        case 'w': return Key::Up;
-        case 's': return Key::Down;
-        case 'a': return Key::Left;
-        case 'd': return Key::Right;
-        case 'q': return Key::Quit;
-        case '\r':
-        case '\n': return Key::Enter;
-        default:  return Key::Unknown;
-        }
+static Key letterToKey(int letter) {
+    switch (tolower(letter)) {
+    case 'w':  return Key::Up;
+    case 's':  return Key::Down;
+    case 'a':  return Key::Left;
+    case 'd':  return Key::Right;
+    case 'q':  return Key::Quit;
+    case 'h':  return Key::Hint;
+    case 'p':  return Key::Pause;
+    case '\r': return Key::Enter;
+    default:   return Key::Unknown;
     }
+}
 
-}  // namespace
-
-#ifdef _WIN32
-
-void startKeyboard() {}
-void stopKeyboard() {}
+static Key arrowToKey(int code) {
+    switch (code) {
+    case ARROW_UP:    return Key::Up;
+    case ARROW_DOWN:  return Key::Down;
+    case ARROW_LEFT:  return Key::Left;
+    case ARROW_RIGHT: return Key::Right;
+    default:          return Key::Unknown;
+    }
+}
 
 Key readKey(int timeoutMs) {
-    for (int waited = 0; !_kbhit(); waited += 20) {
+    int waited = 0;
+    while (!_kbhit()) {   // _kbhit() tells us if a key is waiting
         if (timeoutMs >= 0 && waited >= timeoutMs) {
             return Key::None;
         }
         Sleep(20);
+        waited += 20;
     }
-    int code = _getch();
-    if (code != 0 && code != 224) {
-        return characterToKey(code);
+
+    int code = _getch();   // _getch() reads one key without Enter and without printing it
+    if (code == 0 || code == 224) {
+        return arrowToKey(_getch());
     }
-    switch (_getch()) {   // arrow keys send two codes
-    case 72: return Key::Up;
-    case 80: return Key::Down;
-    case 75: return Key::Left;
-    case 77: return Key::Right;
-    default: return Key::Unknown;
-    }
+    return letterToKey(code);
 }
-
-#else
-
-namespace {
-    termios normalSettings = termios();
-}
-
-void startKeyboard() {
-    tcgetattr(STDIN_FILENO, &normalSettings);
-    termios rawSettings = normalSettings;
-    rawSettings.c_lflag &= ~(ICANON | ECHO);   // raw mode: keys arrive at once and are not printed
-    tcsetattr(STDIN_FILENO, TCSANOW, &rawSettings);
-}
-
-void stopKeyboard() {
-    tcsetattr(STDIN_FILENO, TCSANOW, &normalSettings);
-}
-
-Key readKey(int timeoutMs) {
-    pollfd input = { STDIN_FILENO, POLLIN, 0 };
-    unsigned char code = 0;
-    if (poll(&input, 1, timeoutMs) <= 0) {
-        return Key::None;
-    }
-    if (read(STDIN_FILENO, &code, 1) <= 0) {
-        return Key::Quit;   // input closed
-    }
-    if (code != 27) {
-        return characterToKey(code);
-    }
-    // An arrow key sends 3 bytes: ESC [ A/B/C/D
-    unsigned char rest[2] = { 0, 0 };
-    if (poll(&input, 1, 50) <= 0 || read(STDIN_FILENO, rest, 2) != 2 || rest[0] != '[') {
-        return Key::Unknown;
-    }
-    switch (rest[1]) {
-    case 'A': return Key::Up;
-    case 'B': return Key::Down;
-    case 'C': return Key::Right;
-    case 'D': return Key::Left;
-    default:  return Key::Unknown;
-    }
-}
-
-#endif
 
 bool readTextLine(string& text) {
-    stopKeyboard();   // typing a whole line needs the normal terminal mode
     showCursor(true);
-    bool success = static_cast<bool>(getline(cin, text));
+    bool success = (bool)getline(cin, text);
     showCursor(false);
-    startKeyboard();
     return success;
 }

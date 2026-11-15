@@ -1,89 +1,135 @@
-#include "presentation/Menu.h"
+﻿#include "Menu.h"
 
 #include <iostream>
 #include <vector>
 
-#include "logic/GameRules.h"
-#include "logic/InputValidation.h"
-#include "presentation/Console.h"
-#include "presentation/InputHandler.h"
-#include "presentation/MazeDisplay.h"
-#include "presentation/Panel.h"
+#include "GameRules.h"
+#include "InputValidation.h"
+#include "Console.h"
+#include "InputHandler.h"
+#include "MazeDisplay.h"
+#include "Panel.h"
 
-namespace {
-
-    string menuItem(const string& text, bool isSelected) {
-        if (isSelected) {
-            return panelLine(fgColor(231) + TEXT_BOLD + " ?  " + text, THEME_SELECTED);
-        }
-        return panelLine(textStyle() + "    " + text);
+static string menuItem(const string& text, bool isSelected) {
+    if (isSelected) {
+        return boxLine(fgColor(231) + TEXT_BOLD + " ►  " + text, THEME_SELECTED);
     }
+    return boxLine(textStyle() + "    " + text);
+}
 
-    // Returns the chosen index. Q chooses the last item (Exit / Back).
-    int chooseFromMenu(const string& heading, const vector<string>& items, const vector<string>& descriptions) {
-        int count = static_cast<int>(items.size());
-        int selected = 0;
+// Shows a menu and returns the chosen item. Q chooses the last item (Exit / Back).
+static int chooseFromMenu(const string& heading, const vector<string>& items, const vector<string>& descriptions) {
+    int count = (int)items.size();
+    int selected = 0;
 
-        while (true) {
-            vector<string> lines = buildTitle();
-            lines.insert(lines.end(), { panelTop(), panelTitle(heading), panelSeparator() });
-            for (int i = 0; i < count; i++) {
-                lines.push_back(menuItem(items[i], i == selected));
-            }
-            lines.insert(lines.end(), { panelBottom(), " ", fgColor(THEME_TEXT) + descriptions[selected], " ",
-                                       fgColor(THEME_DIM) + "? ?  choose      Enter  select      Q  back" });
-            drawCentered(lines);
+    while (true) {
+        vector<string> lines = buildTitle();
+        lines.push_back(boxTop());
+        lines.push_back(boxTitle(heading));
+        lines.push_back(boxSeparator());
+        for (int i = 0; i < count; i++) {
+            lines.push_back(menuItem(items[i], i == selected));
+        }
+        lines.push_back(boxBottom());
+        lines.push_back(" ");
+        lines.push_back(fgColor(THEME_TEXT) + descriptions[selected]);
+        lines.push_back(" ");
+        lines.push_back(fgColor(THEME_DIM) + "↑ ↓  choose      Enter  select      Q  back");
+        drawCentered(lines);
 
-            Key key = readKey();
-            if (key == Key::Up) {
-                selected = (selected + count - 1) % count;
-            }
-            else if (key == Key::Down) {
-                selected = (selected + 1) % count;
-            }
-            else if (key == Key::Enter) {
-                return selected;
-            }
-            else if (key == Key::Quit) {
-                return count - 1;
+        Key key = readKey();
+        if (key == Key::Up) {
+            selected--;
+            if (selected < 0) {
+                selected = count - 1;   // from the first item jump to the last one
             }
         }
+        else if (key == Key::Down) {
+            selected++;
+            if (selected == count) {
+                selected = 0;           // from the last item jump to the first one
+            }
+        }
+        else if (key == Key::Enter) {
+            return selected;
+        }
+        else if (key == Key::Quit) {
+            return count - 1;
+        }
     }
+}
 
-    // A small box where the player types one line. Returns false if the input is closed.
-    bool askLine(const string& heading, const string& instruction, const string& error, string& text) {
-        const string prompt = "  > ";
-        int top = drawCentered({ panelTop(), panelTitle(heading), panelSeparator(), panelText(instruction), panelLine(""),
-                                panelLine(textStyle() + prompt), panelBottom(), " ", error });
+// A small box where the player types one line. Returns false if the input is closed.
+static bool askLine(const string& heading, const string& instruction, const string& error, string& text) {
+    const string prompt = "  > ";
+    vector<string> lines;
+    lines.push_back(boxTop());
+    lines.push_back(boxTitle(heading));
+    lines.push_back(boxSeparator());
+    lines.push_back(boxText(instruction));
+    lines.push_back(boxLine(""));
+    lines.push_back(boxLine(textStyle() + prompt));
+    lines.push_back(boxBottom());
+    lines.push_back(" ");
+    lines.push_back(error);
+    int top = drawCentered(lines);
 
-        // the cursor goes right after the prompt, inside the box
-        cout << moveTo(top + 5, centeredColumn(PANEL_WIDTH + 2) + 1 + visibleLength(prompt))
-            << bgColor(THEME_PANEL) << fgColor(THEME_GOLD);
-        return readTextLine(text);
-    }
-
-}  // namespace
+    // put the cursor right after the prompt, inside the box
+    int column = centeredColumn(BOX_WIDTH + 2) + 1 + visibleLength(prompt);
+    cout << moveTo(top + 5, column) << bgColor(THEME_PANEL) << fgColor(THEME_GOLD);
+    return readTextLine(text);
+}
 
 int showMainMenu() {
     return chooseFromMenu("MAIN MENU", { "PLAY", "LEADERBOARD", "HOW TO PLAY", "EXIT" },
-        { "Guide the snake out of a random maze.", "See the best players and their stats.",
-         "Controls, symbols, modes and levels.", "Close the game." });
+        { "Guide the snake out of a random maze.", "The best players of every mode.",
+         "Controls, symbols and game modes.", "Close the game." });
 }
 
 int chooseGameMode() {
-    int choice = chooseFromMenu("CHOOSE A MODE",
-        { getModeName(GameMode::Classic), getModeName(GameMode::Fog),
-         getModeName(GameMode::MoveLimit), "Back" },
-        { "No limits. Find the exit as fast as you can.", "Fog! You only see the tiles near the snake.",
-         "You only have a few moves. Plan your route!", "Return to the main menu." });
-    return choice == 3 ? -1 : choice;
+    vector<string> items;
+    for (int i = 0; i < MODE_COUNT; i++) {
+        items.push_back(getModeName((GameMode)i));
+    }
+    items.push_back("Back");
+
+    int choice = chooseFromMenu("CHOOSE A MODE", items,
+        { "No limits. Find the exit as fast as you can.",
+         "Fog! You only see the tiles near the snake.",
+         "Only a few moves. Plan your route!",
+         "Collect keys to open the locked gates.",
+         "Fog, keys and a move limit - all at once!",
+         "Return to the main menu." });
+    if (choice == MODE_COUNT) {
+        return -1;
+    }
+    return choice;
 }
 
-int chooseDifficulty() {
+int chooseDifficulty(GameMode mode) {
+    if (mode == GameMode::Chaos) {
+        int choice = chooseFromMenu("HOW MUCH CHAOS?", { "Normal", "Full Chaos", "Back" },
+            { "2 keys, normal fog and a fair move limit.",
+             "3 keys, thick fog, and the controls flip every 20 moves!",
+             "Return to the main menu." });
+        if (choice == 0) {
+            return (int)Difficulty::Normal;
+        }
+        if (choice == 1) {
+            return (int)Difficulty::FullChaos;
+        }
+        return -1;
+    }
+
     int choice = chooseFromMenu("CHOOSE A LEVEL", { "Easy", "Normal", "Hard", "Back" },
-        { "Many shortcut doors, a wide view, a generous move limit.", "A balanced challenge.",
-         "Few doors, thick fog and a tight move limit.", "Return to the main menu." });
-    return choice == 3 ? -1 : choice;
+        { "Many doors, wide view, 1 key, a big move limit.",
+         "A balanced challenge.",
+         "Few doors, thick fog, 3 keys, a tight move limit.",
+         "Return to the main menu." });
+    if (choice == 3) {
+        return -1;
+    }
+    return choice;
 }
 
 int askMazeSize() {
@@ -113,34 +159,36 @@ string askPlayerName() {
 
 void showHelp() {
     showBox({
-        panelTitle("HOW TO PLAY"),
-        panelSeparator(),
-        panelText("Lead the snake from the top-left corner to the"),
-        panelText("exit in the bottom-right corner. Be fast: the timer"),
-        panelText("runs, and your time goes to the leaderboard!"),
-        panelLine(""),
-        panelText("Arrows / W A S D   move the snake"),
-        panelText("Enter              select in menus"),
-        panelText("Q                   back"),
-        panelLine(""),
-        panelGlyphText(getSnakeHeadGlyph(), "the snake (it grows while it walks)"),
-        panelGlyphText(getWallGlyph(GameMode::Classic, 0, 10), "wall - you cannot pass"),
-        panelGlyphText(getDoorGlyph(), "special door - you CAN pass!"),
-        panelGlyphText(getExitGlyph(true), "the exit"),
-        panelLine(""),
-        panelText("Classic     no limits"),
-        panelText("Dark Maze   fog: you see only nearby tiles"),
-        panelText("Move Limit  you have a limited number of moves"),
-        panelText("Easy / Normal / Hard changes doors, fog and limit"),
-        panelLine(""),
-        panelText("Tip: big mazes scroll - maximize the window!")
+        boxTitle("HOW TO PLAY"),
+        boxSeparator(),
+        boxText("Lead the snake to the exit in the bottom-right"),
+        boxText("corner. Be fast and use few moves for 3 stars!"),
+        boxLine(""),
+        boxText("Arrows / W A S D  move      H  hint (+5 seconds)"),
+        boxText("P  pause                    Q  back"),
+        boxLine(""),
+        boxGlyphText(getSnakeHeadGlyph(), "the snake"),
+        boxGlyphText(getTrailGlyph(), "your trail - where you have been"),
+        boxGlyphText(getWallGlyph(GameMode::Classic, 0, 6), "wall - you cannot pass"),
+        boxGlyphText(getDoorGlyph(), "secret door - you CAN pass"),
+        boxGlyphText(getKeyGlyph(), "key - pick it up"),
+        boxGlyphText(getGateGlyph(), "gate - opens with a key"),
+        boxGlyphText(getHintGlyph(), "hint - the way to your next goal"),
+        boxGlyphText(getExitGlyph(true), "the exit"),
+        boxLine(""),
+        boxText("Classic     no limits"),
+        boxText("Dark Maze   fog: you only see nearby tiles"),
+        boxText("Move Limit  a limited number of moves"),
+        boxText("Key Hunt    find keys to open the gates"),
+        boxText("Chaos       everything at once!")
         });
 }
 
 void showGoodbye() {
     vector<string> lines = buildTitle();
-    lines.insert(lines.end(), { fgColor(THEME_TEXT) + "Thanks for playing. See you soon!", " ",
-                               fgColor(THEME_DIM) + "Press any key to exit" });
+    lines.push_back(fgColor(THEME_TEXT) + "Thanks for playing. See you soon!");
+    lines.push_back(" ");
+    lines.push_back(fgColor(THEME_DIM) + "Press any key to exit");
     drawCentered(lines);
     readKey();
 }

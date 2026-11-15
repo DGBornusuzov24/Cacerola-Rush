@@ -1,18 +1,21 @@
-#include "logic/InputValidation.h"
+#include "InputValidation.h"
 
 #include <cctype>
-#include <cstdlib>
+#include <sstream>
 
 bool tryParseNumber(const string& text, int& number) {
-    size_t first = text.find_first_not_of(" \t\r\n");
-    if (first == string::npos) {
-        return false;
+    stringstream stream(text);
+    int value = 0;
+    stream >> value;
+    if (stream.fail() || value < 0) {
+        return false;   // the text does not start with a number, the number is too big or negative
     }
-    string trimmed = text.substr(first, text.find_last_not_of(" \t\r\n") - first + 1);
-    if (trimmed.size() > 6 || trimmed.find_first_not_of("0123456789") != string::npos) {
-        return false;
+    string rest;
+    stream >> rest;
+    if (!rest.empty()) {
+        return false;   // something follows the number, like in "12a" or "1.5"
     }
-    number = atoi(trimmed.c_str());
+    number = value;
     return true;
 }
 
@@ -21,7 +24,7 @@ bool isValidPlayerName(const string& name) {
         return false;
     }
     for (char letter : name) {
-        if (!isalnum(static_cast<unsigned char>(letter)) && letter != '_') {
+        if (!isalnum((unsigned char)letter) && letter != '_') {
             return false;
         }
     }
