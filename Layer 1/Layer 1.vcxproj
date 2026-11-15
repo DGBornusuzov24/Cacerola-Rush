@@ -128,22 +128,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Console.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="MazeDisplay.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Panel.h" />
-    <ClInclude Include="presentation\Console.h" />
     <ClInclude Include="Screens.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Cacerola-Rush-10.cpp" />
+    <ClCompile Include="Console.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="MazeDisplay.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Panel.cpp" />
-    <ClCompile Include="presentation\Console.cpp" />
     <ClCompile Include="Screens.cpp" />
   </ItemGroup>
   <ItemGroup>
