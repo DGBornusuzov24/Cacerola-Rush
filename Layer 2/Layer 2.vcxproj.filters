@@ -24,10 +24,10 @@
     <ClCompile Include="PlayerMovement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Layer 1\Scores.cpp">
+    <ClCompile Include="Scores.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Layer 1\GameRules.cpp">
+    <ClCompile Include="GameRules.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,10 +41,10 @@
     <ClInclude Include="PlayerMovement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Layer 1\Scores.h">
+    <ClInclude Include="Scores.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Layer 1\GameRules.h">
+    <ClInclude Include="GameRules.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
