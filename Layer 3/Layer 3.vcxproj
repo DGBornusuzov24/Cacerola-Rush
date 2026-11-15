@@ -23,6 +23,7 @@
     <ClCompile Include="Maze.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Leaderboard.h" />
     <ClInclude Include="Maze.h" />
     <ClInclude Include="Types.h" />
   </ItemGroup>
